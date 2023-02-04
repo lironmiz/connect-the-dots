@@ -189,3 +189,19 @@ function grayscale(data)
     }
     return data;
 }
+
+function booleanFilter(data, threshold)
+{
+    for(let i = 0; i < data.length; i++)
+        data[i] = data[i] > threshold ? 255 : 0;
+    return data;
+}
+
+function edgeDetection(data, w, h, s)
+{
+    return filter(data, w, h, 
+        [[0, -s, 0], 
+        [-s, 4 * s, -s], 
+        [0, -s, 0]]
+    );
+}

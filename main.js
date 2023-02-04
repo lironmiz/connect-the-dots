@@ -3,7 +3,8 @@ const HEIGHT = 400;
 function loadImage(){
     let url = document.getElementById("urlInput").value;
     let image = new Image();
-    image.src = "https://i.natgeofe.com/n/4f5aaece-3300-41a4-b2a8-ed2708a0a27c/domestic-dog_thumb_4x3.jpg";
+    //image.src = "https://i.natgeofe.com/n/4f5aaece-3300-41a4-b2a8-ed2708a0a27c/domestic-dog_thumb_4x3.jpg";
+    image.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Banana-Single.jpg/2324px-Banana-Single.jpg";
     image.setAttribute('crossOrigin', '');
     image.onload = () => {
         let offscreen = new OffscreenCanvas(HEIGHT * image.width / image.height, HEIGHT);
@@ -29,20 +30,19 @@ function process(imageData){
             for(let c = 0; c < 3; c++)
                 data[(j * w + i) * 3 + c] = imageData.data[(j * w + i) * 4 + c];
                 
-    // data = filter(data, w, h, [gaussianBlurFilter_1d(49)]);
-    // data = filter(data, w, h, transpose([gaussianBlurFilter_1d(49)]));
-
-    // data = bilateralFilter(data, w, h, 15, 5, 150)
     data = bilateralFilter_x(data, w, h, 21, 7, 120);
     data = bilateralFilter_y(data, w, h, 15, 5, 100);
     
-    data = recolorImage(data, 12);
+    data = recolorImage(data, 15);
     data = grayscale(data);
-    /*data = filter(data, w, h, 
-        [[0, -1, 0], 
-        [-1, 4, -1], 
-        [0, -1, 0]]
-    );*/
+
+    data = edgeDetection(data, w, h, 7);
+
+    data = filter(data, w, h, [gaussianBlurFilter_1d(9)]);
+    data = filter(data, w, h, transpose([gaussianBlurFilter_1d(9)]));
+
+    data = booleanFilter(data, 5);
+    
 
     for(let i = 0; i < w; i++)
         for(let j = 0; j < h; j++)
