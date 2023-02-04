@@ -7,6 +7,8 @@ function loadImage(){
     image.setAttribute('crossOrigin', '');
     image.onload = () => {
         let offscreen = new OffscreenCanvas(HEIGHT * image.width / image.height, HEIGHT);
+        // let offscreen = new OffscreenCanvas(image.width, image.height)
+
         let context = offscreen.getContext('2d');
         context.drawImage(image, 0, 0, offscreen.width, offscreen.height);
         imageData = context.getImageData(0, 0, offscreen.width, offscreen.height, {colorSpace: "srgb"});
@@ -29,18 +31,91 @@ function process(imageData){
                 
     // data = filter(data, w, h, [gaussianBlurFilter_1d(15)]);
     // data = filter(data, w, h, transpose([gaussianBlurFilter_1d(15)]));
-    data = bilateralFilter(data, w, h, 15, 5, 100);
+
+    // data = bilateralFilter(data, w, h, 11, 5, 100);
     /*data = filter(data, w, h, 
         [[0, -1, 0], 
         [-1, 4, -1], 
         [0, -1, 0]]
     );*/
+    data = recolorImage(data);
 
     for(let i = 0; i < w; i++)
         for(let j = 0; j < h; j++)
             for(let c = 0; c < 3; c++)
                 imageData.data[(j * w + i) * 4 + c] = data[(j * w + i) * 3 + c];
-    console.log(imageData.data);
+}
+
+function recolorImage(data)
+{
+    let centers = KMeansClustering(data, 10);
+    console.log(centers);
+    for(let i = 0; i < data.length; i += 3)
+    {
+        let colorIndex = getNearestIndex(centers, data.slice(i, i + 3));
+        for(let j = 0; j < 3; j++)
+            data[i + j] = centers[colorIndex][j];
+    }
+
+    return data;
+}
+
+function KMeansClustering(data, k)
+{
+    let centers = new Array(k);
+    let clusterSums = new Array(k);
+    let clusterSizes = Array(k).fill(0);
+    for(let i = 0; i < k; i++)
+        centers[i] = [Math.random() * 255, Math.random() * 255, Math.random() * 255];
+
+    for(let iteration = 0; iteration < 100; iteration++){
+        for(let i = 0; i < k; i++)
+        {
+            clusterSums[i] = [0, 0, 0];
+            clusterSizes[i] = 0;
+        }
+
+        for(let i = 0; i < data.length; i += 3)
+        {
+            let pixel = data.slice(i, i + 3);
+            // find nearest center index
+            let nearestIndex = getNearestIndex(centers, pixel);
+            for(let j = 0; j < pixel.length; j++)
+            {
+                clusterSums[nearestIndex][j] += pixel[j];
+            }
+            clusterSizes[nearestIndex]++;
+        }
+
+        for(let i = 0; i < centers.length; i++)
+        {
+            if(clusterSizes[i] === 0)
+                centers[i] = [Math.random() * 255, Math.random() * 255, Math.random() * 255];
+            else
+                for(let j = 0; j < centers[i].length; j++)
+                    centers[i][j] = clusterSums[i][j] / clusterSizes[i];
+        }
+    }
+
+    return centers;
+}
+
+function getNearestIndex(points, testPoint)
+{
+    let minDistanceSquared = Number.POSITIVE_INFINITY;
+    let minIndex = 0;
+    for(let i = 0; i < points.length; i++)
+    {
+        let distanceSquared = 0;
+        for(let j = 0; j < testPoint.length; j++)
+            distanceSquared += (points[i][j] - testPoint[j]) ** 2;
+        if(distanceSquared < minDistanceSquared)
+        {
+            minDistanceSquared = distanceSquared;
+            minIndex = i;
+        }
+    }
+    return minIndex;
 }
 
 loadImage();

@@ -119,5 +119,4 @@ function bilateralFilter(data, w, h, size, sigma1, sigma2){
     }
 
     return newImageData;
-    
 }
