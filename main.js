@@ -29,16 +29,19 @@ function process(imageData){
             for(let c = 0; c < 3; c++)
                 data[(j * w + i) * 3 + c] = imageData.data[(j * w + i) * 4 + c];
                 
-    // data = filter(data, w, h, [gaussianBlurFilter_1d(15)]);
-    // data = filter(data, w, h, transpose([gaussianBlurFilter_1d(15)]));
+    // data = filter(data, w, h, [gaussianBlurFilter_1d(49)]);
+    // data = filter(data, w, h, transpose([gaussianBlurFilter_1d(49)]));
 
-    // data = bilateralFilter(data, w, h, 11, 5, 100);
+    // data = bilateralFilter(data, w, h, 15, 5, 150)
+    data = bilateralFilter_x(data, w, h, 21, 7, 120);
+    data = bilateralFilter_y(data, w, h, 15, 5, 100);
+    
+    data = recolorImage(data, 15);
     /*data = filter(data, w, h, 
         [[0, -1, 0], 
         [-1, 4, -1], 
         [0, -1, 0]]
     );*/
-    data = recolorImage(data);
 
     for(let i = 0; i < w; i++)
         for(let j = 0; j < h; j++)
@@ -46,9 +49,9 @@ function process(imageData){
                 imageData.data[(j * w + i) * 4 + c] = data[(j * w + i) * 3 + c];
 }
 
-function recolorImage(data)
+function recolorImage(data, k)
 {
-    let centers = KMeansClustering(data, 10);
+    let centers = KMeansClustering(data, k);
     console.log(centers);
     for(let i = 0; i < data.length; i += 3)
     {

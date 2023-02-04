@@ -120,3 +120,63 @@ function bilateralFilter(data, w, h, size, sigma1, sigma2){
 
     return newImageData;
 }
+
+function bilateralFilter_x(data, w, h, size, sigma1, sigma2){
+    let newImageData = Array(3 * w * h).fill(0);
+    const n = (size - 1) / 2;
+    
+    for(let p_x = 0; p_x < w; p_x++)
+    {
+        for(let p_y = 0; p_y < h; p_y++)
+        {
+            let weightsSum = 0;
+            for(let i = -n; i <= n; i++)
+            {
+                let x = Math.max(0, Math.min(w - 1, p_x + i));
+
+                let pixelSquareDistance = 0;
+                for(let channel = 0; channel < 3; channel++)
+                    pixelSquareDistance += Math.pow(data[(p_y * w + p_x) * 3 + channel] - data[(p_y * w + x) * 3 + channel], 2)
+
+                let weight = Math.exp(- i * i / (2 * sigma1 ** 2) - pixelSquareDistance / (2 * sigma2 ** 2));
+                weightsSum += weight;
+                for(let channel = 0; channel < 3; channel++)
+                    newImageData[(p_y * w + p_x) * 3 + channel] += weight * data[(p_y * w + x) * 3 + channel];
+            }
+            for(let channel = 0; channel < 3; channel++)
+                newImageData[(p_y * w + p_x) * 3 + channel] /= weightsSum;
+        }
+    }
+
+    return newImageData;
+}
+
+function bilateralFilter_y(data, w, h, size, sigma1, sigma2){
+    let newImageData = Array(3 * w * h).fill(0);
+    const n = (size - 1) / 2;
+    
+    for(let p_x = 0; p_x < w; p_x++)
+    {
+        for(let p_y = 0; p_y < h; p_y++)
+        {
+            let weightsSum = 0;
+            for(let j = -n; j <= n; j++)
+            {
+                let y = Math.max(0, Math.min(h - 1, p_y + j));
+
+                let pixelSquareDistance = 0;
+                for(let channel = 0; channel < 3; channel++)
+                    pixelSquareDistance += Math.pow(data[(p_y * w + p_x) * 3 + channel] - data[(y * w + p_x) * 3 + channel], 2)
+
+                let weight = Math.exp(-j * j / (2 * sigma1 ** 2) - pixelSquareDistance / (2 * sigma2 ** 2));
+                weightsSum += weight;
+                for(let channel = 0; channel < 3; channel++)
+                    newImageData[(p_y * w + p_x) * 3 + channel] += weight * data[(y * w + p_x) * 3 + channel];
+            }
+            for(let channel = 0; channel < 3; channel++)
+                newImageData[(p_y * w + p_x) * 3 + channel] /= weightsSum;
+        }
+    }
+
+    return newImageData;
+}
