@@ -180,3 +180,12 @@ function bilateralFilter_y(data, w, h, size, sigma1, sigma2){
 
     return newImageData;
 }
+
+function grayscale(data)
+{
+    for(let i = 0; i < data.length; i += 3){
+        let [r, g, b] = data.slice(i, i + 3);
+        data[i] = data[i + 1] = data[i + 2] = 0.3 * r + 0.59 * g + 0.11 * b;
+    }
+    return data;
+}

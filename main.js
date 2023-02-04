@@ -36,7 +36,8 @@ function process(imageData){
     data = bilateralFilter_x(data, w, h, 21, 7, 120);
     data = bilateralFilter_y(data, w, h, 15, 5, 100);
     
-    data = recolorImage(data, 15);
+    data = recolorImage(data, 12);
+    data = grayscale(data);
     /*data = filter(data, w, h, 
         [[0, -1, 0], 
         [-1, 4, -1], 
@@ -71,7 +72,7 @@ function KMeansClustering(data, k)
     for(let i = 0; i < k; i++)
         centers[i] = [Math.random() * 255, Math.random() * 255, Math.random() * 255];
 
-    for(let iteration = 0; iteration < 100; iteration++){
+    for(let iteration = 0; iteration < 40; iteration++){
         for(let i = 0; i < k; i++)
         {
             clusterSums[i] = [0, 0, 0];
