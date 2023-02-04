@@ -42,11 +42,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
 });
 
 var canvas = document.getElementById("myCanvas");
-var parent = canvas.parentNode;
-canvas.width = parent.offsetWidth;
-canvas.height = parent.offsetHeight;
-
 const dropZone = document.querySelector('.drop-zone');
+const button = document.querySelector('.btn-primary');
+const ctx = canvas.getContext('2d');
 let imageData;
 
 dropZone.addEventListener('dragover', (e) => {
@@ -68,8 +66,30 @@ dropZone.addEventListener('drop', (e) => {
 
     reader.addEventListener('load', () => {
         imageData = reader.result;
-        alert("Image uploaded successfully");
+        const image = new Image();
+        image.src = imageData;
+        image.onload = () => {
+            canvas.width = image.width;
+            canvas.height = image.height;
+            ctx.drawImage(image, 0, 0, image.width, image.height);
+        };
     });
 
     reader.readAsDataURL(file);
+});
+
+button.addEventListener('click', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    fetch('https://dog.ceo/api/breeds/image/random')
+        .then(response => response.json())
+        .then(data => {
+            imageData = data.message;
+            const img = new Image();
+            img.src = imageData;
+            img.onload = function() {
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+            };
+        });
 });
