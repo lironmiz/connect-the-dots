@@ -13,7 +13,7 @@ function loadImage(){
         let context = offscreen.getContext('2d');
         context.drawImage(image, 0, 0, offscreen.width, offscreen.height);
         imageData = context.getImageData(0, 0, offscreen.width, offscreen.height, {colorSpace: "srgb"});
-        let path = process(imageData)
+        let [outline, path] = process(imageData)
 
         let onscreen = document.getElementById("tempCanvas");
         onscreen.width = offscreen.width;
@@ -21,21 +21,35 @@ function loadImage(){
         let ctx = onscreen.getContext("2d");
         ctx.putImageData(imageData, 0, 0, 0, 0, onscreen.width, onscreen.height);
 
+        // delete details near outline
         ctx.beginPath();
-        ctx.moveTo(...path[0]);
-        for(let i = 1; i < path.length; i++){
-            ctx.lineTo(...path[i]);
+        ctx.lineWidth = 15;
+        ctx.strokeStyle = '#fff';
+        ctx.moveTo(...outline[0]);
+        for(let i = 1; i < outline.length; i++){
+            ctx.lineTo(...outline[i]);
         }
         ctx.stroke();
+
+        // draw path
+        ctx.lineWidth = 2;
+
+        ctx.strokeStyle = '#000';
+        ctx.font = '12px Arial';
+        for(let i = 0; i < path.length - 1; i++){
+            ctx.fillText(i + 1, path[i][0] + 4, path[i][1]);
+            ctx.beginPath();
+            ctx.arc(path[i][0], path[i][1], 3, 0, 360);
+            ctx.stroke();
+        }
     };
 }
 
 function process(imageData){
     let w = imageData.width, h = imageData.height;
 
-    let data = toRGB(imageData);
     let opacity = opacityMask(imageData);
-
+    
     opacity = booleanFilter(opacity, 175);
     let outline = edgeDetection(opacity, w, h, 1, 1);
     // outline to list of points
@@ -44,10 +58,10 @@ function process(imageData){
         if(outline[i] == 255)
             points.push([i % w, Math.floor(i / w)]);
     }
-    console.log(points);
+    
     // to path list
     let path = [points[0]];
-    points.splice(0, 1);
+    
     while(points.length > 0){
         let lastPoint = path[path.length - 1];
         // find closest point
@@ -61,6 +75,8 @@ function process(imageData){
     if(sqrDist(path[0], path[path.length - 1]) < 100 ** 2)
         path.push(path[0]);
 
+    let fullPath = [...path];
+    // reduce number of points in path
     for(let iter = 0; iter < 20; iter++){
         for(let i = 1; i < path.length - 1; i += 2) {
             // cos = (a^2+b^2-c^2)/2ab
@@ -69,21 +85,23 @@ function process(imageData){
             let c2 = sqrDist(path[i - 1], path[i + 1]);
             let cos = (a2 + b2 - c2) / (2 * (a2 * b2) ** 0.5);
             
-            if(cos < -0.9 || c2 < 225)
-                path.splice(i, 1);
+            if(cos < -0.95 || a2 < 15 ** 2 || b2 < 15 ** 2)
+            path.splice(i, 1);
         }
     }
+    
+    // filter image
+    let data = toRGB(imageData);
+    data = grayscale(data);
+    //data = filter(data, w, h, gaussianBlurFilter(7));
+    data = bilateralFilter(data, w, h, 7, 2.4, 35);
+    data = edgeDetection(data, w, h, 10);
+    data = filter(data, w, h, gaussianBlurFilter(5));
+    data = booleanFilter(data, 30);
+    data = invert(data);
+    fromRGB(imageData, data);
 
-    console.log(path);
-
-    for(let i = 0; i < imageData.data.length; i++){
-        imageData.data[i] = 255;
-    }
-    for(let i = 0; i < path.length; i++){
-        imageData.data[4 * (path[i][1] * w + path[i][0]) + 1] = 0;
-    }
-
-    return path;
+    return [fullPath, path];
                 
     /*data = bilateralFilter_x(data, w, h, 21, 7, 120);
     data = bilateralFilter_y(data, w, h, 15, 5, 100);

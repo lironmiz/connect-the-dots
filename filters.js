@@ -190,6 +190,12 @@ function grayscale(data)
     return data;
 }
 
+function invert(data){
+    for(let i = 0; i < data.length; i++)
+        data[i] = 255 - data[i];
+    return data;
+}
+
 function booleanFilter(data, threshold)
 {
     for(let i = 0; i < data.length; i++)
@@ -312,12 +318,16 @@ function toRGB(imageData){
     return data;
 }
 
-function fromRGB(imageData, rgbData){
+function fromRGB(imageData, rgbData, alpha){
     let w = imageData.width, h = imageData.height;
-    for(let i = 0; i < w; i++)
-        for(let j = 0; j < h; j++)
+    for(let i = 0; i < w; i++){
+        for(let j = 0; j < h; j++){
             for(let c = 0; c < 3; c++)
                 imageData.data[(j * w + i) * 4 + c] = rgbData[(j * w + i) * 3 + c];
+            if(alpha !== undefined)
+                imageData.data[(j * w + i) * 4 + 3] = alpha;
+        }
+    }
 }
 
 function opacityMask(imageData){
