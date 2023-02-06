@@ -53,6 +53,9 @@ const canvasOutput = document.querySelector(".outputCanvas");
 const ctxOutput = canvasOutput.getContext("2d");
 let imageDataOutput;
 
+const btnProcessing = document.getElementById("btn-processing");
+const ProcessingStages = new Array();
+
 dropZone.addEventListener("dragover", (e) => {
     e.preventDefault();
     dropZone.classList.add("drag-over");
@@ -113,8 +116,8 @@ function processImage(imageData) {
 }
 
 
-
 btnConvert.addEventListener("click", () => {
+    canvasOutput.style.display = "block";
     ctxOutput.clearRect(0, 0, canvasOutput.width, canvasOutput.height);
     const img = new Image();
     img.src = imageDataOutput;
@@ -124,3 +127,8 @@ btnConvert.addEventListener("click", () => {
         ctxOutput.drawImage(img, 0, 0);
     };
 });
+
+btnProcessing.addEventListener("click", () => {
+    canvasOutput.style.display = "none";
+});
+
