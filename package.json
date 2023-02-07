@@ -1,0 +1,14 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "connect the dots server ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "lirom mizrahi",
+  "license": "ISC",
+  "dependencies": {
+    "sqlite3": "^5.1.4"
+  }
+}
