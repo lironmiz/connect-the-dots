@@ -52,6 +52,8 @@
         </header>
         <div class="canvas-container">
             <canvas class="processingCanvas" id="inputCanvas" hidden></canvas>
+            &emsp;
+            <canvas class="processingCanvas outputCanvas" id="outputCanvas" hidden></canvas>
         </div>
         <!-- Form-->
         <div class="container w-100 mt-5">
@@ -73,9 +75,7 @@
                     <button  id="btn-print" class="btn btn-primary rounded-pill">Print</button>
             </div>
         </div>
-        <div class="canvas-container">
-            <canvas class="processingCanvas outputCanvas" id="outputCanvas" hidden></canvas>
-        </div>
+        
 
         <!-- Footer-->
         <footer class="footer py-4">
@@ -104,6 +104,7 @@
         <script
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
+        <script src="js/filters.js"></script>
         <script src="js/imageProcessing.js"></script>
         <script src="js/scripts.js"></script>
     </body>
