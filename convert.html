@@ -51,13 +51,13 @@
             </div>
         </header>
         <div class="canvas-container">
-            <canvas id="myCanvas"></canvas>
+            <canvas class="processingCanvas" id="inputCanvas" hidden></canvas>
         </div>
         <!-- Form-->
         <div class="container w-100 mt-5">
             <div class="d-flex align-items-center">
                 <div class="col-12 text-center">
-                    <div class="drop-zone text-center p-5 bg-light border
+                    <div id="filedropzone" class="drop-zone text-center p-5 bg-light border
                         border-primary rounded">
                         <i class="fas fa-cloud-upload-alt fa-3x text-primary"></i>
                         <h5 class="text-primary mt-3">Drop your files here</h5>
@@ -72,9 +72,9 @@
                     <button  id="btn-convert" type="button" class="btn btn-danger mb-3" >Convert</button>
                     <button  id="btn-print" class="btn btn-primary rounded-pill">Print</button>
             </div>
-            <div class="canvas-container">
-                <canvas class="outputCanvas" id="myCanvas"></canvas>
-            </div>
+        </div>
+        <div class="canvas-container">
+            <canvas class="processingCanvas outputCanvas" id="outputCanvas" hidden></canvas>
         </div>
 
         <!-- Footer-->
@@ -104,6 +104,7 @@
         <script
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
+        <script src="js/imageProcessing.js"></script>
         <script src="js/scripts.js"></script>
     </body>
 </html>

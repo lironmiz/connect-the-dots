@@ -896,7 +896,7 @@ header.masthead .masthead-heading {
   }
 }
 
-#myCanvas {
+.processingCanvas {
   border: 5px solid black;
   width: 470px;
   height: 470px;
@@ -934,7 +934,6 @@ header.masthead .masthead-heading {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100vh;
 }
 
 #btn-processing,
@@ -1212,7 +1211,7 @@ header.masthead .masthead-heading {
     margin: 40px 0px;
   }
 
-  #myCanvas {
+  .processingCanvas {
     width: 100%;
     height: 300px;
     border: 2px solid black;
@@ -1247,7 +1246,7 @@ header.masthead .masthead-heading {
 }
 
 @media (max-width: 495px) {
-  #myCanvas {
+  .processingCanvas {
     width: 250px;
     height: 250px;
   }
@@ -1333,4 +1332,8 @@ header.masthead .masthead-heading {
     line-height: 2.25rem;
     margin-bottom: 2rem;
   }
+}
+
+#filedropzone{
+  padding: 1rem;
 }
