@@ -50,7 +50,7 @@ document.getElementById("btn-print").addEventListener("click", function () {
     img.src = imageDataOutput;
     img.onload = () => loadImageToCanvas(img, outputCanvas)
 });*/
-const HEIGHT = 400;
+const WIDTH = 640;
 function convert(imageURL, toCanvas){
     toCanvas.style.display = "block";
     toCanvas.getContext("2d").clearRect(0, 0, outputCanvas.width, outputCanvas.height);
@@ -58,13 +58,14 @@ function convert(imageURL, toCanvas){
     img.src = imageURL;
     img.setAttribute('crossOrigin', '');
     img.onload = () => {
-        let offscreen = new OffscreenCanvas(HEIGHT * img.width / img.height, HEIGHT);
+        let offscreen = new OffscreenCanvas(WIDTH, WIDTH * img.height / img.width);
         let context = offscreen.getContext('2d');
         context.drawImage(img, 0, 0, offscreen.width, offscreen.height);
         imageData = context.getImageData(0, 0, offscreen.width, offscreen.height, {colorSpace: "srgb"});
         let pathData = processImage(imageData);
-        loadImageToCanvas(imageData, toCanvas);
-        drawPath(pathData, toCanvas);
+        context.putImageData(imageData, 0, 0);
+        drawPath(pathData, offscreen);
+        copyCanvas(offscreen, toCanvas);
     }
 }
 
@@ -83,8 +84,10 @@ button.addEventListener("click", () => {
         });
 });
 
-function loadImageToCanvas(imageData, canvas){
-    canvas.getContext("2d").putImageData(imageData, 0, 0, 0, 0, canvas.width, canvas.height);
+function copyCanvas(fromCanvas, toCanvas){
+    toCanvas.width = fromCanvas.width;
+    toCanvas.height = fromCanvas.height;
+    toCanvas.getContext("2d").drawImage(fromCanvas, 0, 0, toCanvas.width, toCanvas.height);
     canvas.hidden = false;
 }
 
@@ -92,6 +95,8 @@ function loadImageURLToCanvas(imageURL, canvas){
     const image = new Image();
     image.src = imageURL;
     image.onload = () => {
+        canvas.width = image.width;
+        canvas.height = image.height;
         canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
         canvas.hidden = false;
     };

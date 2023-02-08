@@ -897,16 +897,30 @@ header.masthead .masthead-heading {
 }
 
 .processingCanvas {
-  border: 5px solid black;
-  width: 470px;
-  height: 470px;
+  border: 2px solid black;
+  flex: 1;
+  min-width: 0;
 }
 
 .canvas-container {
+  width: 90vw;
   margin: 60px auto;
   display: flex;
-  justify-content: center;
+  justify-content: center 1rem;
   align-items: center;
+  flex-direction: row;
+  gap: 1rem;
+  flex-grow: 100%;
+  flex-wrap: wrap;
+}
+@media (max-width: 600px){
+  .canvas-container{
+    flex-direction: column;
+  }
+  .processingCanvas {
+    border: 2px solid black;
+    width: 100%;
+  }
 }
 
 .drop-zone {
@@ -1206,17 +1220,6 @@ header.masthead .masthead-heading {
 }
 
 @media (max-width: 480px) {
-  .canvas-container {
-    width: 100% - 20px;
-    margin: 40px 0px;
-  }
-
-  .processingCanvas {
-    width: 100%;
-    height: 300px;
-    border: 2px solid black;
-  }
-
   .container-button {
     flex-direction: column;
     align-items: center;
@@ -1246,11 +1249,6 @@ header.masthead .masthead-heading {
 }
 
 @media (max-width: 495px) {
-  .processingCanvas {
-    width: 250px;
-    height: 250px;
-  }
-
   .drop-zone {
     height: 150px;
   }
