@@ -1,4 +1,4 @@
-import { DatabaseInterface } from "./DatabaseInterface";
+import { DatabaseInterface, ImageData } from "./DatabaseInterface";
 import { createServer, IncomingMessage, ServerResponse } from "http";
 import { parse } from 'querystring';
 
@@ -17,43 +17,52 @@ createServer(async function (req, res){
     let params = parse(query);
     switch(path){
         case '/getImages':
-            getImages(res, params);
+            await getImages(res, params);
             break;
         case '/upload':
-            upload(res, params);
+            await upload(res, params);
             break;
         case '/countdownload':
             res.writeHead(await countdownload(res, params));
-            res.end();
             break;
         default:
-            pageNotFound(res);
+            res.writeHead(404);
             break;
     }
+    res.end();
     
 }).listen(PORT);
 
-function getImages(res: ServerResponse<IncomingMessage>, params: object) {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.write('working on that...');
-}
+async function getImages(res: ServerResponse<IncomingMessage>, params: object) {
+    let page = parseIntParam(params, 'page'), order = parseStringParam(params, 'order');
+    if(!page || !order || !(order in db.orderQueries))
+    {
+        res.writeHead(400);
+        return;
+    }
 
-function upload(res: ServerResponse<IncomingMessage>, params: object) {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.write('working on that...');
-}
-
-async function countdownload(res: ServerResponse<IncomingMessage>, params: object) : Promise<number>{
-    if(!('id' in params))
-        return 400;
-
-    let id: number;
+    let images: ImageData[];
     try{
-        id = Number.parseInt(params['id'] as string);
+        images = await db.getImages(page, order);
     }
     catch(e){
-        return 400;
+        res.writeHead(500);
+        return;
     }
+
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.write(JSON.stringify(images));
+}
+
+async function upload(res: ServerResponse<IncomingMessage>, params: any) {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.write('working on that...');
+}
+
+async function countdownload(res: ServerResponse<IncomingMessage>, params: any) : Promise<number>{
+    let id = parseIntParam(params, 'id');
+    if(!id)
+        return 400;
 
     if(!await db.idExists(id))
         return 400;
@@ -68,7 +77,21 @@ async function countdownload(res: ServerResponse<IncomingMessage>, params: objec
     return 200;
 }
 
-function pageNotFound(res: ServerResponse<IncomingMessage>){
-    res.writeHead(404);
-    res.end();
+function parseIntParam(params: any, key: string) : number | null {
+    if(!(key in params))
+        return null;
+
+    try{
+        return Number.parseInt(params[key] as string);
+    }
+    catch(e){
+        return null;
+    }
+}
+
+function parseStringParam(params: any, key: string) : string | null {
+    if(!(key in params))
+        return null;
+
+    return params[key];
 }

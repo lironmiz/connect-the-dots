@@ -1,6 +1,6 @@
 import { Database } from 'sqlite3';
 
-interface ImageData {
+export interface ImageData {
     id: number,
     upload_date: string,
     downloads: number,
@@ -11,7 +11,7 @@ const IMAGES_PER_PAGE = 4;
 
 export class DatabaseInterface {
     private db: Database;
-    private orderQueries: Record<string, string> = {
+    orderQueries: Record<string, string> = {
         'newest': 'upload_date DESC',
         'oldest': 'upload_date ASC',
         'popular': 'downloads DESC'
@@ -68,8 +68,10 @@ export class DatabaseInterface {
 
     getImages(page: number, orderby: string) : Promise<ImageData[]> {
         return new Promise((resolve, reject) => {
+            if(!(orderby in this.orderQueries))
+                reject();
             this.db.all(
-                `SELECT * FROM Images ORDER BY ${this.orderQueries[orderby] ?? this.orderQueries.newest} LIMIT ?, ?`,
+                `SELECT * FROM Images ORDER BY ${this.orderQueries[orderby]} LIMIT ?, ?`,
                 [
                     (page - 1) * IMAGES_PER_PAGE, 
                     IMAGES_PER_PAGE
