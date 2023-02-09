@@ -1,11 +1,26 @@
-class DatabaseInterface {
+import { Database } from 'sqlite3';
+
+interface ImageData {
+    id: number,
+    upload_date: string,
+    downloads: number,
+    path: string
+}
+
+const IMAGES_PER_PAGE = 4;
+
+export class DatabaseInterface {
+    private db: Database;
+    private orderQueries: Record<string, string> = {
+        'newest': 'upload_date DESC',
+        'oldest': 'upload_date ASC',
+        'popular': 'downloads DESC'
+    }
+
     constructor() {
-        this.db = new sqlite3.Database(
-            "./DB_Interface.db",
-            sqlite3.OPEN_READWRITE,
-            (err) => {
-                if (err) return console.error(err.message);
-            }
+        this.db = new Database(
+            "./images.sqlite",
+            (err) => { if(err) console.log("CAN'T OPEN DB: " + err.message); }
         );
         this.createTable();
     }
@@ -13,15 +28,15 @@ class DatabaseInterface {
     createTable() {
         this.db.run(
             `CREATE TABLE IF NOT EXISTS Images(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            upload_date DATE NOT NULL,
-            downloads INT NOT NULL DEFAULT 0,
-            path TEXT NOT NULL
-        )`
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                upload_date DATE NOT NULL,
+                downloads INT NOT NULL DEFAULT 0,
+                path TEXT NOT NULL
+            )`
         );
     }
 
-    updateDownloadCount(id) {
+    updateDownloadCount(id: number) {
         return new Promise((resolve, reject) => {
             this.db.run(
                 `UPDATE Images SET downloads = downloads + 1 WHERE id = ?`,
@@ -36,10 +51,10 @@ class DatabaseInterface {
         });
     }
 
-    uploadImage(path) {
+    uploadImage(path: string) {
         return new Promise((resolve, reject) => {
             this.db.run(
-                `INSERT INTO Images(upload_date, path) VALUES(datetime('now'),?)`,
+                `INSERT INTO Images(upload_date, path) VALUES(datetime('now'), ?)`,
                 path,
                 (err) => {
                     if (err) {
@@ -51,33 +66,24 @@ class DatabaseInterface {
         });
     }
 
-    getImages(page, order) {
+    getImages(page: number, orderby: string) : Promise<ImageData[]> {
         return new Promise((resolve, reject) => {
-            let query = `SELECT * FROM Images ORDER BY`;
-            switch (order) {
-                case "newest":
-                    query += ` upload_date DESC`;
-                    break;
-                case "oldest":
-                    query += ` upload_date ASC`;
-                    break;
-                case "most_downloads":
-                    query += ` downloads DESC`;
-                    break;
-            }
-            const itemsPerPage = 4;
-            query += ` LIMIT ${(page - 1) * itemsPerPage}, ${itemsPerPage}`;
-
-            this.db.all(query, (err, rows) => {
-                if (err) {
-                    reject(err);
+            this.db.all(
+                `SELECT * FROM Images ORDER BY ${this.orderQueries[orderby] ?? this.orderQueries.newest} LIMIT ?, ?`,
+                [
+                    (page - 1) * IMAGES_PER_PAGE, 
+                    IMAGES_PER_PAGE
+                ], 
+                (err, rows) => {
+                    if (err)
+                        reject(err);
+                    resolve(rows);
                 }
-                resolve(rows);
-            });
+            );
         });
     }
 
-    getNumberOfPages() {
+    getNumberOfPages() : Promise<number> {
         return new Promise((resolve, reject) => {
             this.db.get(`SELECT COUNT(*) FROM Images`, (err, row) => {
                 if (err) {
@@ -102,5 +108,3 @@ class DatabaseInterface {
         });
     }
 }
-
-module.exports = Database;
