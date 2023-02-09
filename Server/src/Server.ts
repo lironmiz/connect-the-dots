@@ -16,8 +16,11 @@ createServer(async function (req, res){
     let [path, query] = [splitURL[0] ?? '', splitURL[1] ?? ''];
     let params = parse(query);
     switch(path){
-        case '/getImages':
+        case '/images':
             await getImages(res, params);
+            break;
+        case '/pagecount':
+            await pageCount(res);
             break;
         case '/upload':
             await upload(res, params);
@@ -75,6 +78,22 @@ async function countdownload(res: ServerResponse<IncomingMessage>, params: any) 
     }
 
     return 200;
+}
+
+async function pageCount(res: ServerResponse<IncomingMessage>) {
+    let pages: number;
+    try{
+        pages = await db.getNumberOfPages();
+        console.log(pages);
+    }
+    catch(e){
+        res.writeHead(500);
+        return;
+    }
+
+    res.writeHead(200, {'Content-Type': 'application/json'});
+    res.write(JSON.stringify({'pages': pages}));
+    return;
 }
 
 function parseIntParam(params: any, key: string) : number | null {
