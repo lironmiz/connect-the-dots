@@ -212,29 +212,31 @@ function edgeDetection(data, w, h, s, channels=3)
     , channels);
 }
 
-
-let maxN = 0;
-function flood(data, w, h, startX, startY, n=0)
+function flood(data, w, h, startX, startY)
 {
+    let visitMap = Array(w * h).fill(false);
+    let startPos = (startY * w + startX) * 3;
+    let [r, g, b] = data.slice(startPos, startPos + 3);
     let stack = [[startX, startY]];
     while(stack.length > 0)
     {
         const [x, y] = stack.pop();
         let i = (y * w + x) * 3;
-        if(!(data[i] == 255 && data[i + 1] == 255 && data[i + 2] == 255))
+        // check if should be visited
+        if(visitMap[i / 3] || !(data[i] == r && data[i + 1] == g && data[i + 2] == b))
             continue;
-        data[i] = 255;
-        data[i + 1] = data[i + 2] = 0;
+        // visit
+        visitMap[i / 3] = true;
         for(let o of [[0, 1], [0, -1], [1, 0], [-1, 0]])
             if(0 <= x + o[0] && x + o[0] < w && 0 <= y + o[1] && y + o[1] < h)
                 stack.push([x + o[0], y + o[1]]);
     }
+    return visitMap;
 }
 
 function recolorImage(data, k)
 {
     let centers = KMeansClustering(data, k);
-    console.log(centers);
     for(let i = 0; i < data.length; i += 3)
     {
         let colorIndex = getNearestIndex(centers, data.slice(i, i + 3));

@@ -58,7 +58,7 @@ function process(imageData){
         if(outline[i] == 255)
             points.push([i % w, Math.floor(i / w)]);
     }
-    
+
     // to path list
     let path = [points[0]];
     
