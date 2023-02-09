@@ -23,7 +23,7 @@ createServer(async function (req, res){
             await pageCount(res);
             break;
         case '/upload':
-            await upload(res, params);
+            await upload(req, res);
             break;
         case '/countdownload':
             res.writeHead(await countdownload(res, params));
@@ -57,9 +57,17 @@ async function getImages(res: ServerResponse<IncomingMessage>, params: object) {
     res.write(JSON.stringify(images));
 }
 
-async function upload(res: ServerResponse<IncomingMessage>, params: any) {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.write('working on that...');
+async function upload(req: IncomingMessage, res: ServerResponse<IncomingMessage>) {
+    // save file
+    let temppath = 'mypath';
+    try{
+        await db.uploadImage(temppath);
+    }
+    catch(e){
+        res.writeHead(500);
+        return;
+    }
+    res.writeHead(200);
 }
 
 async function countdownload(res: ServerResponse<IncomingMessage>, params: any) : Promise<number>{
