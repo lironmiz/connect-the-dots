@@ -90,8 +90,7 @@ export class DatabaseInterface {
                     reject(err);
                 }
                 const totalItems = row["COUNT(*)"];
-                const itemsPerPage = 4;
-                const numberOfPages = Math.ceil(totalItems / itemsPerPage);
+                const numberOfPages = Math.ceil(totalItems / IMAGES_PER_PAGE);
                 resolve(numberOfPages);
             });
         });
@@ -104,6 +103,16 @@ export class DatabaseInterface {
                     reject(err);
                 }
                 resolve(row["COUNT(*)"]);
+            });
+        });
+    }
+
+    idExists(id: number) : Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            this.db.get(`SELECT COUNT(*) FROM Images WHERE id=?`, id, (err, row) => {
+                if (err)
+                    resolve(false);
+                resolve(row["COUNT(*)"] == 1);
             });
         });
     }
