@@ -40,7 +40,13 @@ dropZone.addEventListener("drop", (e) => {
 });
 
 document.getElementById("btn-print").addEventListener("click", function () {
-    window.print();
+    let printWindow = window.open();
+    printWindow.document.write(`<br><img src = '${outputCanvas.toDataURL()}' onload="imageload()"/>`);
+    const imageload = () => {window.print(); window.close();}
+    printWindow.document.write(`<script>const imageload = ${imageload}</script>`);
+    //printWindow.close();
+    // printWindow.location.reload();
+    
 });
 
 /*btnConvert.addEventListener("click", () => {
@@ -88,7 +94,7 @@ function copyCanvas(fromCanvas, toCanvas){
     toCanvas.width = fromCanvas.width;
     toCanvas.height = fromCanvas.height;
     toCanvas.getContext("2d").drawImage(fromCanvas, 0, 0, toCanvas.width, toCanvas.height);
-    canvas.hidden = false;
+    toCanvas.hidden = false;
 }
 
 function loadImageURLToCanvas(imageURL, canvas){

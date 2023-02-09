@@ -897,9 +897,11 @@ header.masthead .masthead-heading {
 }
 
 .processingCanvas {
-  border: 2px solid black;
+  border: 2px solid #222;
   flex: 1;
   min-width: 0;
+  border-radius: 1rem;
+  border-style: dashed;
 }
 
 .canvas-container {
