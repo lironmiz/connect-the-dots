@@ -7,6 +7,8 @@ const inputContext = inputCanvas.getContext("2d", { willReadFrequently: true });
 
 let imageData;
 
+let loadingElement = document.getElementById("loading");
+
 const btnUpload = document.getElementById("btn-upload");
 const btnDownload = document.getElementById("btn-download");
 const btnPrint = document.getElementById("btn-print");
@@ -121,7 +123,7 @@ btnUpload.addEventListener("click", async () => {
 const WIDTH = 640;
 function convert(fromCanvas, toCanvas){
     toCanvas.getContext("2d").clearRect(0, 0, outputCanvas.width, outputCanvas.height);
-
+    
     toCanvas.width = fromCanvas.width;
     toCanvas.height = fromCanvas.height;
     
