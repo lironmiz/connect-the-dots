@@ -1,15 +1,21 @@
 import { DatabaseInterface, ImageData } from "./DatabaseInterface";
 import { createServer, IncomingMessage, ServerResponse } from "http";
 import { parse } from 'querystring';
+import { existsSync, mkdirSync, writeFile } from "fs";
 
 const PORT = 8080;
+const IMAGES_FOLDER = './images';
 
 let db: DatabaseInterface = new DatabaseInterface();
+
+if(!existsSync(IMAGES_FOLDER))
+    mkdirSync(IMAGES_FOLDER);
 
 createServer(async function (req, res){
     let splitURL = req.url?.split('?') ?? [];
     let [path, query] = [splitURL[0] ?? '', splitURL[1] ?? ''];
     let params = parse(query);
+    res.setHeader('Access-Control-Allow-Origin', '*');
     switch(path){
         case '/images':
             await getImages(res, params);
@@ -52,17 +58,37 @@ async function getImages(res: ServerResponse<IncomingMessage>, params: object) {
     res.write(JSON.stringify(images));
 }
 
-async function upload(req: IncomingMessage, res: ServerResponse<IncomingMessage>) {
-    // save file
-    let temppath = 'mypath';
-    try{
-        await db.uploadImage(temppath);
-    }
-    catch(e){
-        res.writeHead(500);
-        return;
-    }
-    res.writeHead(200);
+function upload(req: IncomingMessage, res: ServerResponse<IncomingMessage>) : Promise<void> {
+    return new Promise((resolve, reject) => {
+        let body = '';
+        req.on('data', chunk => {
+            body += chunk.toString(); // convert Buffer to string
+        });
+        req.on('end', async () => {
+            let image = body.split(',')[1];
+            let imagePath = generatePath();
+            // save image
+            writeFile(imagePath, image, 'base64', async () => {
+                try{
+                    await db.uploadImage(imagePath);
+                }
+                catch(e){
+                    res.writeHead(500);
+                    resolve();
+                    return;
+                }
+                res.writeHead(200);
+                resolve();
+            });
+        });
+    });
+}
+
+let counter = 0;
+const MAX_COUNTER = 1000;
+function generatePath() : string{
+    let name = (Date.now() * MAX_COUNTER + (counter++ % MAX_COUNTER)).toString(36);
+    return `${IMAGES_FOLDER}/${name}.png`;
 }
 
 async function countdownload(res: ServerResponse<IncomingMessage>, params: any) : Promise<number>{

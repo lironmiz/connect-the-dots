@@ -1,12 +1,13 @@
+const SERVER = 'http://localhost:8080';
 
 const inputCanvas = document.getElementById("inputCanvas");
 const dropZone = document.querySelector(".drop-zone");
-const button = document.querySelector(".btn-primary");
+const APIButton = document.getElementById("btn-api");
 const inputContext = inputCanvas.getContext("2d", { willReadFrequently: true });
 
 let imageData;
 
-const btnConvert = document.getElementById("btn-convert");
+const btnUpload = document.getElementById("btn-upload");
 const outputCanvas = document.getElementById("outputCanvas");
 const outputContext = outputCanvas.getContext("2d");
 
@@ -93,6 +94,21 @@ document.getElementById("btn-print").addEventListener("click", function () {
     printWindow.document.write(`<script>const imageload = ${imageload}</script>`);    
 });
 
+btnUpload.addEventListener("click", async () => {
+    try{
+        await fetch(
+            `${SERVER}/upload`,
+            {
+                method: 'post',
+                body: outputCanvas.toDataURL()
+            }
+        );
+    }
+    catch(e){
+        alert("failed");
+    }
+});
+
 const WIDTH = 640;
 function convert(fromCanvas, toCanvas){
     toCanvas.getContext("2d").clearRect(0, 0, outputCanvas.width, outputCanvas.height);
@@ -123,12 +139,7 @@ function convertProcess(imgData, toCanvas, generateColorMap=true){
     toCanvas.hidden = false;
 }
 
-
-btnProcessing.addEventListener("click", () => {
-    outputCanvas.style.display = "none";
-});
-
-button.addEventListener("click", async () => {
+APIButton.addEventListener("click", async () => {
     inputContext.clearRect(0, 0, inputCanvas.width, inputCanvas.height);
     let response = await fetch("https://dog.ceo/api/breeds/image/random");
     let data = await response.json();
