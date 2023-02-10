@@ -6,11 +6,6 @@ const PORT = 8080;
 
 let db: DatabaseInterface = new DatabaseInterface();
 
-/*(async function main() {
-    await db.uploadImage('newImage');
-    console.log(await db.getImages(1, 'popular'));
-})();*/
-
 createServer(async function (req, res){
     let splitURL = req.url?.split('?') ?? [];
     let [path, query] = [splitURL[0] ?? '', splitURL[1] ?? ''];
