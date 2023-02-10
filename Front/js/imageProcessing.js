@@ -23,11 +23,11 @@ let mapWidth, mapHeight;
 let scale;
 
 let removeBackgroundOn = false;
-let reprocess = false;
 let backgroundChanged = false;
 inputCanvas.addEventListener("mousedown", (e) => {
     removeBackgroundImageData = inputContext.getImageData(0, 0, inputCanvas.width, inputCanvas.height, {colorSpace: 'srgb'});
     removeBackgroundOn = true;
+    removeBackground(e);
 });
 inputCanvas.addEventListener("mouseup", (e) => {
     removeBackgroundOn = false;
@@ -38,16 +38,23 @@ inputCanvas.addEventListener("mousemove", (e) => {
 });
 let removeBackgroundImageData;
 function removeBackground(e){
-    reprocess = backgroundChanged = true;
+    
     let rect = inputCanvas.getBoundingClientRect();
     const x = Math.floor((e.clientX - rect.left) / (rect.right - rect.left) * inputCanvas.width);
     const y = Math.floor((e.clientY - rect.top) / (rect.bottom - rect.top) * inputCanvas.height);
     // make transparent
     visitMap = flood(colorMap, outputCanvas.width, outputCanvas.height, x, y);
+    let removeCount = 0;
     for(let i = 0; i < visitMap.length; i++){
         if(visitMap[i]){
+            if(removeBackgroundImageData.data[4 * i + 3] != 0)
+            removeCount++;
             removeBackgroundImageData.data[4 * i + 3] = 0;
         }
+    }
+    if(removeCount !== 0){
+        backgroundChanged = true;
+        setReprocess();
     }
 }
 
@@ -56,15 +63,18 @@ setInterval(() => {
         inputContext.putImageData(removeBackgroundImageData, 0, 0);
     }
     backgroundChanged = false;
-}, 120);
+}, 100);
 
-setInterval(() => {
-    if(reprocess){
+let reprocessTimeout;
+function setReprocess(){
+    if(reprocessTimeout)
+        clearTimeout(reprocessTimeout);
+    reprocessTimeout = setTimeout(() => {
+        reprocessTimeout = null;
         let data = inputContext.getImageData(0, 0, inputCanvas.width, inputCanvas.height, {colorSpace: 'srgb'});
         convertProcess(data, outputCanvas, false);
-    }
-    reprocess = false;
-}, 2000);
+    }, 800);
+}
 
 dropZone.addEventListener("dragover", (e) => {
     e.preventDefault();
@@ -137,7 +147,16 @@ function convert(fromCanvas, toCanvas){
     convertProcess(tempData, toCanvas);
 }
 
-function convertProcess(imgData, toCanvas, generateColorMap=true){
+function wait(time){
+    return new Promise((resolve, reject) => {
+        setTimeout(resolve, time);
+    });
+}
+
+async function convertProcess(imgData, toCanvas, generateColorMap=true){
+    document.getElementById('loading-container').hidden = false;
+    await wait(100);
+
     let context = toCanvas.getContext('2d');
     if(generateColorMap){
         let colorMapCanvas = new OffscreenCanvas(toCanvas.width, toCanvas.height);
@@ -163,6 +182,7 @@ function convertProcess(imgData, toCanvas, generateColorMap=true){
     btnUpload.disabled = false;
     btnDownload.disabled = false;
     btnPrint.disabled = false;
+    document.getElementById('loading-container').hidden = true;
 }
 
 APIButton.addEventListener("click", async () => {
