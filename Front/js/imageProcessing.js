@@ -8,6 +8,8 @@ const inputContext = inputCanvas.getContext("2d", { willReadFrequently: true });
 let imageData;
 
 const btnUpload = document.getElementById("btn-upload");
+const btnDownload = document.getElementById("btn-download");
+const btnPrint = document.getElementById("btn-print");
 const outputCanvas = document.getElementById("outputCanvas");
 const outputContext = outputCanvas.getContext("2d");
 
@@ -90,8 +92,15 @@ dropZone.addEventListener("drop", (e) => {
 document.getElementById("btn-print").addEventListener("click", function () {
     let printWindow = window.open();
     printWindow.document.write(`<br><img src = '${outputCanvas.toDataURL()}' onload="imageload()"/>`);
-    const imageload = () => {window.print(); window.close();}
+    const imageload = () => { window.print(); window.close(); }
     printWindow.document.write(`<script>const imageload = ${imageload}</script>`);    
+});
+
+btnDownload.addEventListener("click", () => {
+    let link = document.createElement('a');
+    link.download = 'image.png';
+    link.href = outputCanvas.toDataURL()
+    link.click();
 });
 
 btnUpload.addEventListener("click", async () => {
@@ -105,7 +114,7 @@ btnUpload.addEventListener("click", async () => {
         );
     }
     catch(e){
-        alert("failed");
+        btnUpload.disabled = true;
     }
 });
 
@@ -133,10 +142,21 @@ function convertProcess(imgData, toCanvas, generateColorMap=true){
     }
     
     let pathData = processImage(imgData);
-    context.putImageData(imgData, 0, 0);
+    context.fillStyle = '#fff';
+    context.fillRect(0, 0, toCanvas.width, toCanvas.height);
+    
+    let tempCanvas = new OffscreenCanvas(toCanvas.width, toCanvas.height);
+    let tempContext = tempCanvas.getContext('2d');
+    tempContext.putImageData(imgData, 0, 0);
+    context.drawImage(tempCanvas, 0, 0);
+
+    context.fillStyle = '#000';
     drawPath(pathData, toCanvas);
 
     toCanvas.hidden = false;
+    btnUpload.disabled = false;
+    btnDownload.disabled = false;
+    btnPrint.disabled = false;
 }
 
 APIButton.addEventListener("click", async () => {
@@ -159,6 +179,7 @@ async function loadImageURLToCanvas(imageURL, canvas){
     return new Promise((resolve, reject) => {
         const image = new Image();
         image.src = imageURL;
+        image.setAttribute('crossOrigin', '');
         image.onload = () => {
             canvas.width = image.width;
             canvas.height = image.height;
