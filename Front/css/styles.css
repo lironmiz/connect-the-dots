@@ -641,7 +641,7 @@ p {
 }
 
 .page-section {
-  padding: 6rem 0;
+  padding: 2.5rem 0;
 }
 
 .page-section h2.section-heading {
@@ -655,7 +655,7 @@ p {
   font-weight: 400;
   font-style: italic;
   font-family: "Roboto Slab", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  margin-bottom: 4rem;
+  margin-bottom: 3rem;
 }
 
 @media (min-width: 768px) {
@@ -1082,8 +1082,9 @@ header.masthead .masthead-heading {
   }
 
   .timeline>li {
+    transform: translateX(-2.5rem);
     min-height: 100px;
-    margin-bottom: 100px;
+    margin-bottom: -3rem;
   }
 
   .timeline>li .timeline-panel {
@@ -1111,11 +1112,21 @@ header.masthead .masthead-heading {
     padding: 0 30px 20px 20px;
     text-align: left;
   }
+
+  .timeline>.timeline-inverted{
+    transform: translateX(2.5rem);
+  }
 }
 
 @media (min-width: 970px) {
   .timeline>li {
     min-height: 150px;
+    transform: translateX(-4.5rem);
+    margin-bottom: -1rem;
+  }
+
+  .timeline>.timeline-inverted{
+    transform: translateX(4.5rem);
   }
 
   .timeline>li .timeline-panel {
