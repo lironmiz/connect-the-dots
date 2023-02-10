@@ -192,35 +192,6 @@ async function loadImageURLToCanvas(imageURL, canvas){
     });
 }
 
-function drawPath(pathData, toCanvas){
-    let ctx = toCanvas.getContext("2d");
-    let [outline, path] = pathData;
-    if(path.length === 0)
-        return;
-
-    // delete details near outline
-    ctx.beginPath();
-    ctx.lineWidth = 15;
-    ctx.strokeStyle = '#fff';
-    ctx.moveTo(...outline[0]);
-    for(let i = 1; i < outline.length; i++){
-        ctx.lineTo(...outline[i]);
-    }
-    ctx.stroke();
-
-    // draw path
-    ctx.lineWidth = 2;
-
-    ctx.strokeStyle = '#000';
-    ctx.font = '12px Arial';
-    for(let i = 0; i < path.length - 1; i++){
-        ctx.fillText(i + 1, path[i][0] + 4, path[i][1]);
-        ctx.beginPath();
-        ctx.arc(path[i][0], path[i][1], 3, 0, 360);
-        ctx.stroke();
-    }
-}
-
 function processImage(imgData){
     let w = imgData.width, h = imgData.height;
 
@@ -234,44 +205,6 @@ function processImage(imgData){
         if(outline[i] == 255)
             points.push([i % w, Math.floor(i / w)]);
     }
-    let fullPath, path;
-    if(points.length === 0){
-        fullPath = [];
-        path = [];
-    }
-    else
-    {
-        // to path list
-        path = [points[0]];
-        
-        while(points.length > 0){
-            let lastPoint = path[path.length - 1];
-            // find closest point
-            let i = getNearestIndex(points, lastPoint);
-            if(sqrDist(lastPoint, points[i]) > 100 ** 2)
-                break;
-            path.push(points[i]);
-            points.splice(i, 1);
-        }
-        // close loop
-        if(sqrDist(path[0], path[path.length - 1]) < 100 ** 2)
-            path.push(path[0]);
-
-        fullPath = [...path];
-        // reduce number of points in path
-        for(let iter = 0; iter < 20; iter++){
-            for(let i = 1; i < path.length - 1; i += 2) {
-                // cos = (a^2+b^2-c^2)/2ab
-                let a2 = sqrDist(path[i - 1], path[i]);
-                let b2 = sqrDist(path[i], path[i + 1]);
-                let c2 = sqrDist(path[i - 1], path[i + 1]);
-                let cos = (a2 + b2 - c2) / (2 * (a2 * b2) ** 0.5);
-                
-                if(cos < -0.95 || a2 < 15 ** 2 || b2 < 15 ** 2)
-                path.splice(i, 1);
-            }
-        }
-    }
     
     // filter image
     let data = toRGB(imgData);
@@ -283,7 +216,7 @@ function processImage(imgData){
     data = invert(data);
     fromRGB(imgData, data);
 
-    return [fullPath, path];
+    return pointsToPath(points);
 }
 
 function processColorMap(imgData){
