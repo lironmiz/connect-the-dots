@@ -20,7 +20,7 @@ const ProcessingStages = [];
 
 let colorMap;
 let mapWidth, mapHeight;
-let scale;
+let scale = 1;
 
 let removeBackgroundOn = false;
 let backgroundChanged = false;
@@ -43,6 +43,14 @@ function removeBackground(e){
     const x = Math.floor((e.clientX - rect.left) / (rect.right - rect.left) * inputCanvas.width);
     const y = Math.floor((e.clientY - rect.top) / (rect.bottom - rect.top) * inputCanvas.height);
     // make transparent
+    const r = 3;
+    for(let i = -r; i <= r; i++)
+        for(let j = -r; j <= r; j++)
+            if(i * i + j * j <= r * r && (0 <= x + i && x + i < outputCanvas.width && 0 <= y + j && y + j < outputCanvas.height))
+                removeBackgroundAt(x + i, y + j);
+}
+
+function removeBackgroundAt(x, y){
     visitMap = flood(colorMap, outputCanvas.width, outputCanvas.height, x, y);
     let removeCount = 0;
     for(let i = 0; i < visitMap.length; i++){
