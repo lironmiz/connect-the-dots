@@ -38,16 +38,31 @@ inputCanvas.addEventListener("mousemove", (e) => {
 });
 let removeBackgroundImageData;
 function removeBackground(e){
-    
     let rect = inputCanvas.getBoundingClientRect();
-    const x = Math.floor((e.clientX - rect.left) / (rect.right - rect.left) * inputCanvas.width);
-    const y = Math.floor((e.clientY - rect.top) / (rect.bottom - rect.top) * inputCanvas.height);
+    let w = inputCanvas.width, h = inputCanvas.height;
+    const x = Math.floor((e.clientX - rect.left) / (rect.right - rect.left) * w);
+    const y = Math.floor((e.clientY - rect.top) / (rect.bottom - rect.top) * h);
     // make transparent
-    const r = 3;
-    for(let i = -r; i <= r; i++)
-        for(let j = -r; j <= r; j++)
-            if(i * i + j * j <= r * r && (0 <= x + i && x + i < outputCanvas.width && 0 <= y + j && y + j < outputCanvas.height))
-                removeBackgroundAt(x + i, y + j);
+    removeBackgroundAt(x, y);
+    const r = 11;
+    let removeCount = 0;
+    for(let i = -r; i <= r; i++){
+        for(let j = -r; j <= r; j++){
+            if(i * i + j * j <= r * r && (0 <= x + i && x + i < outputCanvas.width && 0 <= y + j && y + j < outputCanvas.height)){
+                let k = ((y + j) * w + (x + i)) * 4 + 3;
+                removeCount++;
+                if(removeBackgroundImageData.data[k] != 0){
+                    removeCount++;
+                    removeBackgroundImageData.data[k] = 0;
+                }
+            }
+        }
+    }
+    console.log(removeCount);
+    if(removeCount != 0){
+        backgroundChanged = true;
+        setReprocess();
+    }
 }
 
 function removeBackgroundAt(x, y){
@@ -55,9 +70,10 @@ function removeBackgroundAt(x, y){
     let removeCount = 0;
     for(let i = 0; i < visitMap.length; i++){
         if(visitMap[i]){
-            if(removeBackgroundImageData.data[4 * i + 3] != 0)
-            removeCount++;
-            removeBackgroundImageData.data[4 * i + 3] = 0;
+            if(removeBackgroundImageData.data[4 * i + 3] != 0){
+                removeCount++;
+                removeBackgroundImageData.data[4 * i + 3] = 0;
+            }
         }
     }
     if(removeCount !== 0){
