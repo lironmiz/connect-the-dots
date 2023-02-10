@@ -18,31 +18,10 @@ function pointsToPath(points, scale){
         }
     }
 
-    
-
-    // fullPath = [...path];
-    /*for(let iter = 0; iter < 20; iter++){
-        for(let i = 1; i < path.length - 1; i += 2) {
-            // cos = (a^2+b^2-c^2)/2ab
-            let a2 = sqrDist(path[i - 1], path[i]);
-            let b2 = sqrDist(path[i], path[i + 1]);
-            let c2 = sqrDist(path[i - 1], path[i + 1]);
-            let cos = (a2 + b2 - c2) / (2 * (a2 * b2) ** 0.5);
-            
-            if(cos < -0.95 || a2 < 15 ** 2 || b2 < 15 ** 2)
-                path.splice(i, 1);
-        }
-    }*/
-    // reduce number of points in path
-    // path = 
-    // console.log(path);
-    //console.log(path);
-    /*console.log(path);
-    let [i, d] = closestIndexToLine(path[0], path[path.length - 1], path.slice(1, path.length - 1));
-    console.log(path[0], path[path.length - 1], path[i], d);*/
-
     return [fullPath, path];
 }
+
+const MAX_GAP = 40;
 
 function findPath(points, start){
     let path = [start];
@@ -50,7 +29,7 @@ function findPath(points, start){
         let lastPoint = path[path.length - 1];
         // find closest point
         let i = getNearestIndex(points, lastPoint);
-        if(sqrDist(lastPoint, points[i]) > 100 ** 2)
+        if(sqrDist(lastPoint, points[i]) > MAX_GAP ** 2)
             break;
         path.push(points[i]);
         points.splice(i, 1);
@@ -100,7 +79,7 @@ function drawPath(pathData, toCanvas, scale){
     ctx.strokeStyle = '#fff';
     ctx.moveTo(...outline[0]);
     for(let i = 1; i < outline.length; i++){
-        if(sqrDist(outline[i], outline[i - 1]) > 100 ** 2){
+        if(sqrDist(outline[i], outline[i - 1]) > MAX_GAP ** 2){
             ctx.stroke();
             ctx.moveTo(...outline[i]);
             ctx.beginPath();
