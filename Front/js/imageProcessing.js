@@ -20,6 +20,7 @@ const ProcessingStages = [];
 
 let colorMap;
 let mapWidth, mapHeight;
+let scale;
 
 let removeBackgroundOn = false;
 let reprocess = false;
@@ -122,10 +123,13 @@ btnUpload.addEventListener("click", async () => {
 
 const WIDTH = 640;
 function convert(fromCanvas, toCanvas){
+    
     toCanvas.getContext("2d").clearRect(0, 0, outputCanvas.width, outputCanvas.height);
     
     toCanvas.width = fromCanvas.width;
     toCanvas.height = fromCanvas.height;
+
+    scale = (toCanvas.width * toCanvas.height) ** 0.4 / 125;
     
     imageData = fromCanvas.getContext('2d').getImageData(0, 0, fromCanvas.width, fromCanvas.height, {colorSpace: 'srgb'});
     tempData = fromCanvas.getContext('2d').getImageData(0, 0, fromCanvas.width, fromCanvas.height, {colorSpace: 'srgb'});
@@ -153,7 +157,7 @@ function convertProcess(imgData, toCanvas, generateColorMap=true){
     context.drawImage(tempCanvas, 0, 0);
 
     context.fillStyle = '#000';
-    drawPath(pathData, toCanvas);
+    drawPath(pathData, toCanvas, scale);
 
     toCanvas.hidden = false;
     btnUpload.disabled = false;
@@ -216,7 +220,7 @@ function processImage(imgData){
     data = invert(data);
     fromRGB(imgData, data);
 
-    return pointsToPath(points);
+    return pointsToPath(points, scale);
 }
 
 function processColorMap(imgData){

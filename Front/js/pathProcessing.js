@@ -1,40 +1,45 @@
-function pointsToPath(points){
-    let fullPath, path;
-    if(points.length === 0){
-        fullPath = [];
-        path = [];
-    }
-    else
+function pointsToPath(points, scale){
+    let fullPath = [], path = [];
+    // to path list
+    while(points.length > 0)
     {
-        // to path list
         let start = points[0];
-        path = findPath(points, start);
+        let subpath = findPath(points, start);
         // find path from the other direction
-        path2 = findPath(points, start);
+        let path2 = findPath(points, start);
 
-        path = path2.reverse().concat(path);
+        subpath = path2.reverse().concat(subpath);
 
-        fullPath = [...path];
-        /*for(let iter = 0; iter < 20; iter++){
-            for(let i = 1; i < path.length - 1; i += 2) {
-                // cos = (a^2+b^2-c^2)/2ab
-                let a2 = sqrDist(path[i - 1], path[i]);
-                let b2 = sqrDist(path[i], path[i + 1]);
-                let c2 = sqrDist(path[i - 1], path[i + 1]);
-                let cos = (a2 + b2 - c2) / (2 * (a2 * b2) ** 0.5);
-                
-                if(cos < -0.95 || a2 < 15 ** 2 || b2 < 15 ** 2)
-                    path.splice(i, 1);
-            }
-        }*/
-        // reduce number of points in path
-        path = douglasPeuckerCurveDecimation(path, 6);
-        //console.log(path);
-        /*console.log(path);
-        let [i, d] = closestIndexToLine(path[0], path[path.length - 1], path.slice(1, path.length - 1));
-        console.log(path[0], path[path.length - 1], path[i], d);*/
-        
+        let reduced = douglasPeuckerCurveDecimation(subpath, 6 * scale);
+        if(reduced.length > 10)
+        {
+            path = path.concat(reduced);
+            fullPath = fullPath.concat(subpath);
+        }
     }
+
+    
+
+    // fullPath = [...path];
+    /*for(let iter = 0; iter < 20; iter++){
+        for(let i = 1; i < path.length - 1; i += 2) {
+            // cos = (a^2+b^2-c^2)/2ab
+            let a2 = sqrDist(path[i - 1], path[i]);
+            let b2 = sqrDist(path[i], path[i + 1]);
+            let c2 = sqrDist(path[i - 1], path[i + 1]);
+            let cos = (a2 + b2 - c2) / (2 * (a2 * b2) ** 0.5);
+            
+            if(cos < -0.95 || a2 < 15 ** 2 || b2 < 15 ** 2)
+                path.splice(i, 1);
+        }
+    }*/
+    // reduce number of points in path
+    // path = 
+    // console.log(path);
+    //console.log(path);
+    /*console.log(path);
+    let [i, d] = closestIndexToLine(path[0], path[path.length - 1], path.slice(1, path.length - 1));
+    console.log(path[0], path[path.length - 1], path[i], d);*/
 
     return [fullPath, path];
 }
@@ -83,7 +88,7 @@ function furthestIndexFromLine(a, b, points){
     return [maxIndex, maxDistance];
 }
 
-function drawPath(pathData, toCanvas){
+function drawPath(pathData, toCanvas, scale){
     let ctx = toCanvas.getContext("2d");
     let [outline, path] = pathData;
     if(path.length === 0)
@@ -91,23 +96,28 @@ function drawPath(pathData, toCanvas){
 
     // delete details near outline
     ctx.beginPath();
-    ctx.lineWidth = 15;
+    ctx.lineWidth = 10 + 5 * scale;
     ctx.strokeStyle = '#fff';
     ctx.moveTo(...outline[0]);
     for(let i = 1; i < outline.length; i++){
+        if(sqrDist(outline[i], outline[i - 1]) > 100 ** 2){
+            ctx.stroke();
+            ctx.moveTo(...outline[i]);
+            ctx.beginPath();
+        }
         ctx.lineTo(...outline[i]);
     }
     ctx.stroke();
 
     // draw path
-    ctx.lineWidth = 1;
+    ctx.lineWidth = Math.max(1, scale);
 
     ctx.strokeStyle = '#000';
-    ctx.font = '11px Arial';
+    ctx.font = `${Math.round(3 + 8 * scale)}px Arial`;
     for(let i = 0; i < path.length - 1; i++){
-        ctx.fillText(i + 1, path[i][0] + 2.5, path[i][1] + 1);
+        ctx.fillText(i + 1, path[i][0] + 2.5 * scale, path[i][1] + scale);
         ctx.beginPath();
-        ctx.arc(path[i][0], path[i][1], 3, 0, 360);
+        ctx.arc(path[i][0], path[i][1], 3 * scale, 0, 360);
         ctx.stroke();
     }
 }
