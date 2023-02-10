@@ -906,7 +906,7 @@ header.masthead .masthead-heading {
 
 .canvas-container {
   width: 90vw;
-  margin: 60px auto;
+  margin: 1rem auto;
   display: flex;
   justify-content: center 1rem;
   align-items: center;
@@ -930,7 +930,7 @@ header.masthead .masthead-heading {
   border-radius: 20px;
   height: 200px;
   text-align: center;
-  margin: 60px auto;
+  margin: 1rem auto;
 }
 
 .drop-zone i {

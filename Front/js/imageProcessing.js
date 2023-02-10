@@ -1,12 +1,15 @@
+const SERVER = 'http://localhost:8080';
 
 const inputCanvas = document.getElementById("inputCanvas");
 const dropZone = document.querySelector(".drop-zone");
-const button = document.querySelector(".btn-primary");
+const APIButton = document.getElementById("btn-api");
 const inputContext = inputCanvas.getContext("2d", { willReadFrequently: true });
 
 let imageData;
 
-const btnConvert = document.getElementById("btn-convert");
+const btnUpload = document.getElementById("btn-upload");
+const btnDownload = document.getElementById("btn-download");
+const btnPrint = document.getElementById("btn-print");
 const outputCanvas = document.getElementById("outputCanvas");
 const outputContext = outputCanvas.getContext("2d");
 
@@ -89,8 +92,30 @@ dropZone.addEventListener("drop", (e) => {
 document.getElementById("btn-print").addEventListener("click", function () {
     let printWindow = window.open();
     printWindow.document.write(`<br><img src = '${outputCanvas.toDataURL()}' onload="imageload()"/>`);
-    const imageload = () => {window.print(); window.close();}
+    const imageload = () => { window.print(); window.close(); }
     printWindow.document.write(`<script>const imageload = ${imageload}</script>`);    
+});
+
+btnDownload.addEventListener("click", () => {
+    let link = document.createElement('a');
+    link.download = 'image.png';
+    link.href = outputCanvas.toDataURL()
+    link.click();
+});
+
+btnUpload.addEventListener("click", async () => {
+    try{
+        await fetch(
+            `${SERVER}/upload`,
+            {
+                method: 'post',
+                body: outputCanvas.toDataURL()
+            }
+        );
+    }
+    catch(e){
+        btnUpload.disabled = true;
+    }
 });
 
 const WIDTH = 640;
@@ -117,18 +142,24 @@ function convertProcess(imgData, toCanvas, generateColorMap=true){
     }
     
     let pathData = processImage(imgData);
-    context.putImageData(imgData, 0, 0);
+    context.fillStyle = '#fff';
+    context.fillRect(0, 0, toCanvas.width, toCanvas.height);
+    
+    let tempCanvas = new OffscreenCanvas(toCanvas.width, toCanvas.height);
+    let tempContext = tempCanvas.getContext('2d');
+    tempContext.putImageData(imgData, 0, 0);
+    context.drawImage(tempCanvas, 0, 0);
+
+    context.fillStyle = '#000';
     drawPath(pathData, toCanvas);
 
     toCanvas.hidden = false;
+    btnUpload.disabled = false;
+    btnDownload.disabled = false;
+    btnPrint.disabled = false;
 }
 
-
-btnProcessing.addEventListener("click", () => {
-    outputCanvas.style.display = "none";
-});
-
-button.addEventListener("click", async () => {
+APIButton.addEventListener("click", async () => {
     inputContext.clearRect(0, 0, inputCanvas.width, inputCanvas.height);
     let response = await fetch("https://dog.ceo/api/breeds/image/random");
     let data = await response.json();
@@ -148,6 +179,7 @@ async function loadImageURLToCanvas(imageURL, canvas){
     return new Promise((resolve, reject) => {
         const image = new Image();
         image.src = imageURL;
+        image.setAttribute('crossOrigin', '');
         image.onload = () => {
             canvas.width = image.width;
             canvas.height = image.height;
