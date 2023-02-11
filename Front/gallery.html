@@ -78,7 +78,7 @@
                 <div id="page-label" style="font-size: 1.2rem; font-weight: bold;">
                     Page 1/4
                 </div>
-                <button id="prev-page" class="page-nav-btn">
+                <button id="next-page" class="page-nav-btn">
                     &raquo;
                 </button>
             </span>
@@ -86,15 +86,15 @@
         <!-- gallery -->
         <div class="gallery min-vh-100">
             <div class="container-lg">
-                <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+                <div id="gallery-images" style="display: flex; flex-wrap: wrap; justify-content: center;">
                     <img src="https://via.placeholder.com/300"
-                            class="gallery-item" alt="gallery">
+                            class="gallery-item" alt="gallery" index='0' hidden>
                     <img src="https://via.placeholder.com/300"
-                            class="gallery-item" alt="gallery">
+                            class="gallery-item" alt="gallery" index='1' hidden>
                     <img src="https://via.placeholder.com/300"
-                            class="gallery-item" alt="gallery">
+                            class="gallery-item" alt="gallery" index='2' hidden>
                     <img src="https://via.placeholder.com/300"
-                            class="gallery-item" alt="gallery">
+                            class="gallery-item" alt="gallery" index='3' hidden>
                 </div>
             </div>
         </div>
@@ -113,33 +113,12 @@
                         <img src="https://via.placeholder.com/300"
                             class="modal-img" alt="modal img">
                     </div>
+                    <div class="modal-footer">
+                        <button id="btn-print" type="button" class="btn btn-outline-warning modal-extra-btn" data-dismiss="modal">Print</button>
+                    </div>
                 </div>
             </div>
         </div>
-        <!-- page navigation -->
-        <div class="d-flex justify-content-center">
-            <nav aria-label="Page navigation">
-                <ul class="pagination">
-                    <li class="page-item bg-warning p-3">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    <li class="page-item bg-warning p-3"><a class="page-link"
-                            href="#">1</a></li>
-                    <li class="page-item bg-warning p-3"><a class="page-link"
-                            href="#">2</a></li>
-                    <li class="page-item bg-warning p-3"><a class="page-link"
-                            href="#">3</a></li>
-                    <li class="page-item bg-warning p-3">
-                        <a class="page-link" href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-
         <!-- Footer-->
         <footer class="footer py-4">
             <div class="container">
