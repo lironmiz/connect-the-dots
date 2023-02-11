@@ -44,7 +44,7 @@ function removeBackground(e){
     const y = Math.floor((e.clientY - rect.top) / (rect.bottom - rect.top) * h);
     // make transparent
     removeBackgroundAt(x, y);
-    const r = 11;
+    const r = 9;
     let removeCount = 0;
     for(let i = -r; i <= r; i++){
         for(let j = -r; j <= r; j++){
@@ -58,7 +58,6 @@ function removeBackground(e){
             }
         }
     }
-    console.log(removeCount);
     if(removeCount != 0){
         backgroundChanged = true;
         setReprocess();
@@ -97,7 +96,7 @@ function setReprocess(){
         reprocessTimeout = null;
         let data = inputContext.getImageData(0, 0, inputCanvas.width, inputCanvas.height, {colorSpace: 'srgb'});
         convertProcess(data, outputCanvas, false);
-    }, 800);
+    }, 750);
 }
 
 dropZone.addEventListener("dragover", (e) => {
@@ -257,24 +256,28 @@ function processImage(imgData){
     // filter image
     let data = toRGB(imgData);
     data = grayscale(data);
-    data = bilateralFilter(data, w, h, 7, 2.4, 35);
+    data = filter(data, w, h, [gaussianBlurFilter_1d(7)]);
+    data = filter(data, w, h, transpose([gaussianBlurFilter_1d(7)]));
     data = edgeDetection(data, w, h, 10);
-    data = filter(data, w, h, gaussianBlurFilter(5));
+    data = filter(data, w, h, [gaussianBlurFilter_1d(5)]);
+    data = filter(data, w, h, transpose([gaussianBlurFilter_1d(5)]));
     data = booleanFilter(data, 30);
     data = invert(data);
     fromRGB(imgData, data);
 
-    return pointsToPath(points, scale);
+    let res = pointsToPath(points, scale);
+    return res;
 }
 
 function processColorMap(imgData){
     let w = imgData.width, h = imgData.height;
+
     let data = toRGB(imgData);
 
-    data = bilateralFilter_x(data, w, h, 21, 7, 120);
-    data = bilateralFilter_y(data, w, h, 15, 5, 100);
-    
-    data = recolorImage(data, 25);
+    data = filter(data, w, h, [gaussianBlurFilter_1d(15)]);
+    data = filter(data, w, h, transpose([gaussianBlurFilter_1d(15)]));
+
+    data = recolorImage(data, w, h, 25);
 
     return data;
 }
