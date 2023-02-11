@@ -826,6 +826,39 @@ header.masthead .masthead-heading {
   font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
+.gallery{
+  background-color: rgba(255, 255, 255, 0.988);
+  padding: 1rem;
+}
+
+.gallery-item{
+  max-width: 400px;
+  margin: 1.5rem;
+  border-radius: 0.75rem;
+}
+
+.gallery img{
+  width: 100%;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.42);
+  cursor: pointer;
+}
+
+#dropdown-section{
+  background-color: rgba(138, 135, 135, 0.4);
+  margin: 0.4rem;
+  border-radius: 0.6rem;
+  border: 3px #2224 solid; 
+  box-shadow: inset -3px -3px 20px 0px #0004;
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
+  display: flex;
+  padding-left: 1.5rem;
+}
+
+#gallery-modal .modal-img{
+  width: 100%;
+}
+
 @media (min-width: 768px) {
   header.masthead {
     padding-top: 17rem;
@@ -1349,8 +1382,31 @@ header.masthead .masthead-heading {
   padding: 1rem;
 }
 
+.page-nav-btn{
+  border: 2px solid #0006;
+  height: 2rem;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: #fb8;
+}
+#next-page{
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+#prev-page{
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
 .squares-background {
   background-image: linear-gradient(45deg, #bbb 25%, transparent 25%), linear-gradient(-45deg, #bbb 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #bbb 75%), linear-gradient(-45deg, transparent 75%, #bbb 75%);
   background-size: 20px 20px;
   background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+
+.modal-extra-btn{
+  background-color: #bbb;
+}
+
+.modal-extra-btn:hover{
+  background-color: none;
 }

@@ -1,10 +1,10 @@
 import { DatabaseInterface, ImageData } from "./DatabaseInterface";
 import { createServer, IncomingMessage, ServerResponse } from "http";
 import { parse } from 'querystring';
-import { existsSync, mkdirSync, writeFile } from "fs";
+import { existsSync, mkdirSync, readFile, writeFile } from "fs";
 
 const PORT = 8080;
-const IMAGES_FOLDER = './images';
+const IMAGES_FOLDER = './imagefiles';
 
 let db: DatabaseInterface = new DatabaseInterface();
 
@@ -16,6 +16,18 @@ createServer(async function (req, res){
     let [path, query] = [splitURL[0] ?? '', splitURL[1] ?? ''];
     let params = parse(query);
     res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, POST, GET');
+
+    // serve images
+    if(path.startsWith('/imagefiles')){
+        readFile('.' + path, (err, data) => {
+            res.writeHead(200);
+            res.end(data, 'binary');
+        });
+        return;
+    }
+
+    // server api requests
     switch(path){
         case '/images':
             await getImages(res, params);
@@ -36,6 +48,8 @@ createServer(async function (req, res){
     res.end();
     
 }).listen(PORT);
+
+console.log(`Running at localhost port ${PORT}`);
 
 async function getImages(res: ServerResponse<IncomingMessage>, params: object) {
     let page = parseIntParam(params, 'page'), order = parseStringParam(params, 'order');
@@ -113,7 +127,6 @@ async function pageCount(res: ServerResponse<IncomingMessage>) {
     let pages: number;
     try{
         pages = await db.getNumberOfPages();
-        console.log(pages);
     }
     catch(e){
         res.writeHead(500);
