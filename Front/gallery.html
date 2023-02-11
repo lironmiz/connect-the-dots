@@ -59,8 +59,8 @@
             </div>
         </header>
         <!-- dropdown-menu -->
-        <section class="text-center mt-3" id="dropdown-section">
-            <div class="dropdown">
+        <div class="text-center" id="dropdown-section">
+            <span class="dropdown" style="margin-right: 2rem">
                 <button class="btn btn-warning dropdown-toggle" type="button"
                     id="order-dropdown" data-bs-toggle="dropdown">
                     Order by
@@ -70,39 +70,34 @@
                     <li><a href="#" class="dropdown-item">Oldest</a></li>
                     <li><a href="#" class="dropdown-item">Popular</a></li>
                 </ul>
-            </div>
-        </section>
+            </span>
+            <span style="padding: 0.5rem; display: flex; gap: 0.4rem;">
+                <button id="prev-page" class="page-nav-btn">
+                    &laquo;
+                </button>
+                <div id="page-label" style="font-size: 1.2rem; font-weight: bold;">
+                    Page 1/4
+                </div>
+                <button id="prev-page" class="page-nav-btn">
+                    &raquo;
+                </button>
+            </span>
+        </div>
         <!-- gallery -->
-        <section class="gallery min-vh-100">
+        <div class="gallery min-vh-100">
             <div class="container-lg">
-                <div class="row d-flex justify-content-center">
-                    <div class="col-6 col-md-4">
-                        <img src="https://via.placeholder.com/300"
+                <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+                    <img src="https://via.placeholder.com/300"
                             class="gallery-item" alt="gallery">
-                    </div>
-                    <div class="col-6 col-md-4">
-                        <img src="https://via.placeholder.com/300"
+                    <img src="https://via.placeholder.com/300"
                             class="gallery-item" alt="gallery">
-                    </div>
-                    <div class="col-6 col-md-4">
-                        <img src="https://via.placeholder.com/300"
+                    <img src="https://via.placeholder.com/300"
                             class="gallery-item" alt="gallery">
-                    </div>
-                    <div class="col-6 col-md-4">
-                        <img src="https://via.placeholder.com/300"
+                    <img src="https://via.placeholder.com/300"
                             class="gallery-item" alt="gallery">
-                    </div>
-                    <div class="col-6 col-md-4">
-                        <img src="https://via.placeholder.com/300"
-                            class="gallery-item" alt="gallery">
-                    </div>
-                    <div class="col-6 col-md-4">
-                        <img src="https://via.placeholder.com/300"
-                            class="gallery-item" alt="gallery">
-                    </div>
                 </div>
             </div>
-        </section>
+        </div>
         <!-- Modal -->
         <div class="modal fade" id="gallery-modal" tabindex="-1"
             aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -122,7 +117,7 @@
             </div>
         </div>
         <!-- page navigation -->
-        <section class="d-flex justify-content-center">
+        <div class="d-flex justify-content-center">
             <nav aria-label="Page navigation">
                 <ul class="pagination">
                     <li class="page-item bg-warning p-3">
@@ -143,7 +138,7 @@
                     </li>
                 </ul>
             </nav>
-        </section>
+        </div>
 
         <!-- Footer-->
         <footer class="footer py-4">

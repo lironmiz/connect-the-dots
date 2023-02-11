@@ -832,7 +832,7 @@ header.masthead .masthead-heading {
 }
 
 .gallery-item{
-  max-width: 100%;
+  max-width: 300px;
   margin: 10px;
 }
 
@@ -845,7 +845,15 @@ header.masthead .masthead-heading {
 }
 
 #dropdown-section{
-  background-color: rgba(194, 164, 164, 0.298);
+  background-color: rgba(138, 135, 135, 0.4);
+  margin: 0.4rem;
+  border-radius: 0.6rem;
+  border: 3px #2224 solid; 
+  box-shadow: inset -3px -3px 20px 0px #0004;
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
+  display: flex;
+  padding-left: 1.5rem;
 }
 
 #gallery-modal .modal-img{
@@ -1362,4 +1370,12 @@ header.masthead .masthead-heading {
 
 #filedropzone{
   padding: 1rem;
+}
+
+.page-nav-btn{
+  border: 2px solid #0006;
+  height: 2rem;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: #fb8;
 }
