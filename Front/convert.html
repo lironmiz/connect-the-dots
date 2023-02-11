@@ -18,8 +18,10 @@
         <link
             href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700"
             rel="stylesheet" type="text/css" />
+        
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
+
     </head>
     <body id="page-top">
         <!-- Navigation-->
@@ -51,8 +53,20 @@
             </div>
         </header>
         <div class="canvas-container">
-            <canvas class="processingCanvas" id="inputCanvas" hidden></canvas>
+            <canvas class="processingCanvas squares-background" id="inputCanvas" hidden></canvas>
             <canvas class="processingCanvas outputCanvas" id="outputCanvas" hidden></canvas>
+        </div>
+        <div id="loading-container" style="color: #c40; text-align: center; font-size: x-large; font-weight: bold;" hidden>
+            Loading...
+        </div>
+        
+        <div class="container-button">
+            <div style="display: flex; gap: 1rem">
+                <button id="btn-api" type="button" class="btn btn-primary rounded-pill">Image from API</button>
+                <button id="btn-print" class="btn btn-primary rounded-pill" disabled>Print</button>
+                <button id="btn-download" class="btn btn-primary rounded-pill" disabled>Download</button>
+                <button id="btn-upload" class="btn btn-primary rounded-pill" disabled>Upload</button>
+            </div>
         </div>
         <!-- Form-->
         <div class="container w-100 mt-5">
@@ -65,16 +79,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="container-button">
-            <div class="row">
-                    <button id="btn-processing" class="btn btn-danger mb-3">Show Processing</button>
-                    <button  id="btn-API" type="button" class="btn btn-primary rounded-pill">Image from API</button>
-                    <button  id="btn-convert" type="button" class="btn btn-danger mb-3" >Convert</button>
-                    <button  id="btn-print" class="btn btn-primary rounded-pill">Print</button>
-            </div>
-        </div>
-        
+        </div>   
 
         <!-- Footer-->
         <footer class="footer py-4">
@@ -104,6 +109,7 @@
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="js/filters.js"></script>
+        <script src="js/pathProcessing.js"></script>
         <script src="js/imageProcessing.js"></script>
         <script src="js/scripts.js"></script>
     </body>
