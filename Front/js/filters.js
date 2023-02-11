@@ -1,12 +1,13 @@
 function filter(data, w, h, kernel, channels=3){
     let newImageData = Array(3 * w * h).fill(0);
     
+    n_y = Math.floor(kernel.length / 2);
+    n_x = Math.floor(kernel[0].length / 2);
+
     for(let p_x = 0; p_x < w; p_x++)
     {
         for(let p_y = 0; p_y < h; p_y++)
         {
-            n_y = Math.floor(kernel.length / 2);
-            n_x = Math.floor(kernel[0].length / 2);
             for(let i = -n_x; i <= n_x; i++)
             {
                 for(let j = -n_y; j <= n_y; j++)
@@ -31,7 +32,7 @@ function gaussianBlurFilter(size){
     // size = 6 standard deviations
     // => stDev = size / 3
     // => variance = stDev ** 2
-    let variance = (size / 6) ** 2;
+    let variance = (size * size) / 36;
     let kernel = new Array(size);
     let sum = 0
     for(let j = 0; j < size; j++)
@@ -57,7 +58,7 @@ function gaussianBlurFilter_1d(size){
     // size = 6 standard deviations
     // => stDev = size / 3
     // => variance = stDev ** 2
-    let variance = (size / 6) ** 2;
+    let variance = (size * size) / 36;
     let kernel = new Array(size);
     let sum = 0;
     for(let i = 0; i < size; i++)
@@ -107,7 +108,7 @@ function bilateralFilter(data, w, h, size, sigma1, sigma2){
                     for(let channel = 0; channel < 3; channel++)
                         pixelSquareDistance += Math.pow(data[(p_y * w + p_x) * 3 + channel] - data[(y * w + x) * 3 + channel], 2)
 
-                    let weight = Math.exp(-(i * i + j * j) / (2 * sigma1 ** 2) - pixelSquareDistance / (2 * sigma2 ** 2));
+                    let weight = Math.exp(-(i * i + j * j) / (2 * sigma1 * sigma1) - pixelSquareDistance / (2 * sigma2 * sigma2));
                     weightsSum += weight;
                     for(let channel = 0; channel < 3; channel++)
                         newImageData[(p_y * w + p_x) * 3 + channel] += weight * data[(y * w + x) * 3 + channel];
@@ -138,7 +139,7 @@ function bilateralFilter_x(data, w, h, size, sigma1, sigma2){
                 for(let channel = 0; channel < 3; channel++)
                     pixelSquareDistance += Math.pow(data[(p_y * w + p_x) * 3 + channel] - data[(p_y * w + x) * 3 + channel], 2)
 
-                let weight = Math.exp(- i * i / (2 * sigma1 ** 2) - pixelSquareDistance / (2 * sigma2 ** 2));
+                let weight = Math.exp(- i * i / (2 * sigma1 * sigma1) - pixelSquareDistance / (2 * sigma2 * sigma2));
                 weightsSum += weight;
                 for(let channel = 0; channel < 3; channel++)
                     newImageData[(p_y * w + p_x) * 3 + channel] += weight * data[(p_y * w + x) * 3 + channel];
@@ -168,7 +169,7 @@ function bilateralFilter_y(data, w, h, size, sigma1, sigma2){
                 for(let channel = 0; channel < 3; channel++)
                     pixelSquareDistance += Math.pow(data[(p_y * w + p_x) * 3 + channel] - data[(y * w + p_x) * 3 + channel], 2)
 
-                let weight = Math.exp(-j * j / (2 * sigma1 ** 2) - pixelSquareDistance / (2 * sigma2 ** 2));
+                let weight = Math.exp(-j * j / (2 * sigma1 * sigma1) - pixelSquareDistance / (2 * sigma2 * sigma2));
                 weightsSum += weight;
                 for(let channel = 0; channel < 3; channel++)
                     newImageData[(p_y * w + p_x) * 3 + channel] += weight * data[(y * w + p_x) * 3 + channel];
@@ -234,9 +235,9 @@ function flood(data, w, h, startX, startY)
     return visitMap;
 }
 
-function recolorImage(data, k)
+function recolorImage(data, w, h, k)
 {
-    let centers = KMeansClustering(data, k);
+    let centers = KMeansClustering(data, w, h, k);
     for(let i = 0; i < data.length; i += 3)
     {
         let colorIndex = getNearestIndex(centers, data.slice(i, i + 3));
@@ -247,7 +248,7 @@ function recolorImage(data, k)
     return data;
 }
 
-function KMeansClustering(data, k)
+function KMeansClustering(data, w, h, k)
 {
     let centers = new Array(k);
     let clusterSums = new Array(k);
@@ -262,16 +263,19 @@ function KMeansClustering(data, k)
             clusterSizes[i] = 0;
         }
 
-        for(let i = 0; i < data.length; i += 9)
-        {
-            let pixel = data.slice(i, i + 3);
-            // find nearest center index
-            let nearestIndex = getNearestIndex(centers, pixel);
-            for(let j = 0; j < pixel.length; j++)
-            {
-                clusterSums[nearestIndex][j] += pixel[j];
+        let jump = 1 + Math.round(scale);
+        for(let x = 0; x < w; x += jump){
+            for(let y = 0; y < h; y += jump){
+                let i = (y * w + x) * 3;
+                let pixel = data.slice(i, i + 3);
+                // find nearest center index
+                let nearestIndex = getNearestIndex(centers, pixel);
+                for(let j = 0; j < pixel.length; j++)
+                {
+                    clusterSums[nearestIndex][j] += pixel[j];
+                }
+                clusterSizes[nearestIndex]++;
             }
-            clusterSizes[nearestIndex]++;
         }
 
         for(let i = 0; i < centers.length; i++)
@@ -290,7 +294,7 @@ function KMeansClustering(data, k)
 function sqrDist(p1, p2){
     let distanceSquared = 0;
     for(let j = 0; j < p1.length; j++)
-        distanceSquared += (p1[j] - p2[j]) ** 2;
+        distanceSquared += (p1[j] - p2[j]) * (p1[j] - p2[j]);
     return distanceSquared;
 }
 
