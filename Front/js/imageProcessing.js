@@ -44,7 +44,7 @@ function removeBackground(e){
     const y = Math.floor((e.clientY - rect.top) / (rect.bottom - rect.top) * h);
     // make transparent
     removeBackgroundAt(x, y);
-    const r = 11;
+    const r = 9;
     let removeCount = 0;
     for(let i = -r; i <= r; i++){
         for(let j = -r; j <= r; j++){
@@ -58,7 +58,6 @@ function removeBackground(e){
             }
         }
     }
-    console.log(removeCount);
     if(removeCount != 0){
         backgroundChanged = true;
         setReprocess();

@@ -255,14 +255,14 @@ function KMeansClustering(data, k)
     for(let i = 0; i < k; i++)
         centers[i] = [Math.random() * 255, Math.random() * 255, Math.random() * 255];
 
-    for(let iteration = 0; iteration < 40; iteration++){
+    for(let iteration = 0; iteration < 30; iteration++){
         for(let i = 0; i < k; i++)
         {
             clusterSums[i] = [0, 0, 0];
             clusterSizes[i] = 0;
         }
 
-        for(let i = 0; i < data.length; i += 3)
+        for(let i = 0; i < data.length; i += 9)
         {
             let pixel = data.slice(i, i + 3);
             // find nearest center index
