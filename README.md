@@ -32,6 +32,7 @@ A website for creating a dot line game when the user enters a picture and it cre
  ![](https://img.shields.io/tokei/lines/github/lironmiz/connect-the-dots?color=blue&label=Lines%20of%20Code)
 ![Size](https://img.shields.io/github/repo-size/lironmiz/connect-the-dots?color=red&label=Repo%20Size%20)
  <img src="https://img.shields.io/github/languages/top/lironmiz/connect-the-dots" alt="top language" />
+
 <!-- Table of Contents -->
 <details>
 
@@ -137,6 +138,22 @@ Reactfolio-App/
 
 <img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white">
 
+<img src="https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white">
+
+<img src="https://img.shields.io/badge/Canva-%2300C4CC.svg?style=for-the-badge&logo=Canva&logoColor=white">
+ 
+<img src="https://img.shields.io/badge/-Stackoverflow-FE7A16?style=for-the-badge&logo=stack-overflow&logoColor=white">
+
+<img src="https://img.shields.io/badge/bootstrap-%23563D7C.svg?style=for-the-badge&logo=bootstrap&logoColor=white">
+
+<img src="https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white">
+
+<img src="https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white">
+
+<img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white">
+
+<img src="https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white">
+
 </p>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -151,12 +168,12 @@ Reactfolio-App/
 Download or clone this repo by using the link below:
 
 ```bash
- https://github.com/ladunjexa/Reactfolio-App
+ https://github.com/lironmiz/connect-the-dots.git
 ```
 
 #### Step 2:
 
-Reactfolio using NPM (Node Package Manager), therefore, make sure that Node.js is installed by execute the following command in console:
+ make sure that Node.js is installed by execute the following command in console:
 
 ```bash
   node -v
@@ -175,10 +192,10 @@ At the main folder execute the following command in console to get the required 
 
 #### Step 2:
 
-At the main folder execute the following command in console to run the webapp:
+At the main folder execute the following command in console to run the server:
 
 ```bash
-  npm start
+  npx ts-node Server/src/server.ts
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -186,6 +203,14 @@ At the main folder execute the following command in console to run the webapp:
 <!--  -->
 ## :muscle: Features
 
+  + Turning a picture into a dot line game
+  + Option to print the image or download it
+  + Manual background removal
+  + Possibility to create the game as several objects in the picture
+  + Gallery to display all games
+  + Option to sort the games by category int the gallery
+  + Support for all image file types
+  
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- Video of the project -->
@@ -202,9 +227,9 @@ At the main folder execute the following command in console to run the webapp:
 <!-- About the authors -->
 ## :telephone: About the authors
 
- - Alon Regev 
+ - Alon Regev - A soldier in a technological unit in the army
  
- - Liron Mizarhi 
+ - Liron Mizarhi - Navy soldier and programmer
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
