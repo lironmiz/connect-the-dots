@@ -3,6 +3,8 @@
 
 <img src="https://i.imgur.com/dBaSKWF.gif" height="50" width="100%">
 
+![image](https://user-images.githubusercontent.com/91504420/218862204-9a373a89-c2ce-45d9-aff1-41d1fdc9927d.png)
+
 <p>
 A website for creating a dot line game when the user enters a picture and it creates a dot line game for him with cool features and image processing for coding hackathon 🥳.
 </p>
@@ -64,6 +66,10 @@ A website for creating a dot line game when the user enters a picture and it cre
 This repository houses an stunning Responsive Website that make a connect the dot game from given image 🤯.
 
 Our mission is to bring you back to childhood!
+
+for more information you can see the project documentation we did at the link below and also look at the project video!
+
+- [Planning Document](https://docs.google.com/document/d/1xzy8paq7EBBskn_GaemU54gSpc9PtrlC6QMFPCwp6P8/edit?usp=sharing) (docs)
 
 <!-- Folder Structure -->
 ### :bangbang: Folder Structure
@@ -184,10 +190,10 @@ Download or clone this repo by using the link below:
 
 #### Step 1:
 
-At the main folder execute the following command in console to get the required dependencies:
+Use npm install to download the required dependencies:
 
 ```bash
-  npm install
+  npm install ...
 ```
 
 #### Step 2:
@@ -210,6 +216,7 @@ At the main folder execute the following command in console to run the server:
   + Gallery to display all games
   + Option to sort the games by category int the gallery
   + Support for all image file types
+  + Option to uplode image from API that give you cute pictures of dogs!
   
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -236,6 +243,9 @@ At the main folder execute the following command in console to run the server:
 
 ![image](https://user-images.githubusercontent.com/91504420/218861278-8cbbd58a-5109-4303-a092-217b35c02160.png)
 
+![image](https://user-images.githubusercontent.com/91504420/218863611-34e78855-8117-4759-9862-0533a7cfdfa9.png)
+
+![image](https://user-images.githubusercontent.com/91504420/218864426-95a70085-e680-4031-917f-a03a28074d2a.png)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
