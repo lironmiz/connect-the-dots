@@ -222,6 +222,21 @@ At the main folder execute the following command in console to run the server:
 <!-- Screenshots -->
 ## :framed_picture: Screenshots
 
+![image](https://user-images.githubusercontent.com/91504420/218858285-72dcc6db-a8e5-4e5c-8537-003f971fd74c.png)
+
+![image](https://user-images.githubusercontent.com/91504420/218858407-c6292808-a80f-4029-962a-3499a9d8c7f2.png)
+
+![image](https://user-images.githubusercontent.com/91504420/218858615-832390b3-25f3-401d-ad8a-177e1907cb62.png)
+
+![image](https://user-images.githubusercontent.com/91504420/218858683-6df6c076-8309-4ee1-9623-6386aad75f68.png)
+
+![image](https://user-images.githubusercontent.com/91504420/218859351-3da1d357-9250-4235-94fd-2b963529a1de.png)
+
+![image](https://user-images.githubusercontent.com/91504420/218859601-f5f2740d-0d0a-4386-916e-808a592f9432.png)
+
+![image](https://user-images.githubusercontent.com/91504420/218861278-8cbbd58a-5109-4303-a092-217b35c02160.png)
+
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- About the authors -->
@@ -236,6 +251,6 @@ At the main folder execute the following command in console to run the server:
 <!-- Project status -->
 ## :octocat: Project Status
 
-### Project is: In Prograss!
+### Project is: Done!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
