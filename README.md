@@ -76,7 +76,7 @@ for more information you can see the project documentation we did at the link be
 
 Here is the folder structure of the website 
 ```
-Reactfolio-App/
+connect-the-dots/
 |- Front/
   |-- assets/
     |-- img/
@@ -110,7 +110,7 @@ Reactfolio-App/
   |-- src/
     |-- DatabaseInterface.ts
     |-- Server.ts
-  |-- README.md
+|-- README.md
   |-- Package-lock.json
   |-- package.json
 |-- gitignore  
