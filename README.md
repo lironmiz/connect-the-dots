@@ -9,6 +9,9 @@
 A website for creating a dot line game when the user enters a picture and it creates a dot line game for him with cool features and image processing for coding hackathon 🥳.
 </p>
 
+![WhatsApp Image 2023-02-17 at 09 46 49](https://user-images.githubusercontent.com/91504420/219595059-d77a83b3-c2d5-4995-9120-35af14301989.jpg)
+
+
 <!-- Badges -->
 <p>
   <a href="https://github.com/lironmiz/connect-the-dots/graphs/contributors">
