@@ -227,6 +227,8 @@ At the main folder execute the following command in console to run the server:
 ## :video_camera: Video Of The Project
  
 
+https://user-images.githubusercontent.com/91504420/222888487-14944014-fe49-44d3-a459-26ab7580b67e.mp4
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- Screenshots -->
