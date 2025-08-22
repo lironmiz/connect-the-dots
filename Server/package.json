@@ -4,6 +4,7 @@
   "description": "<a name=\"readme-top\"></a>\r <h1 align=\"center\"> 👾 connect-the-dots 👾 </h1>",
   "main": "src/Server.ts",
   "scripts": {
+    "start": "ts-node src/Server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
